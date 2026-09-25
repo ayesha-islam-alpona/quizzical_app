@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert' as json;
 import 'package:http/http.dart' as http;
 import '../models/category_model.dart';
 import '../models/question_model.dart';
@@ -6,20 +6,17 @@ import '../models/question_model.dart';
 class ApiService {
   static const String _baseUrl = 'https://opentdb.com';
 
-  // Fetch all quiz categories
   static Future<List<CategoryModel>> fetchCategories() async {
     final response = await http.get(Uri.parse('$_baseUrl/api_category.php'));
-
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      final data = json.jsonDecode(response.body);
       List categoriesJson = data['trivia_categories'];
       return categoriesJson.map((e) => CategoryModel.fromJson(e)).toList();
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Failed to fetch categories');
     }
   }
 
-  // Fetch questions based on user configuration
   static Future<List<QuestionModel>> fetchQuestions({
     required int amount,
     required int categoryId,
@@ -31,13 +28,12 @@ class ApiService {
     if (type != 'any') url += '&type=$type';
 
     final response = await http.get(Uri.parse(url));
-
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      final data = json.jsonDecode(response.body);
       List questionsJson = data['results'];
       return questionsJson.map((e) => QuestionModel.fromJson(e)).toList();
     } else {
-      throw Exception('Failed to load questions');
+      throw Exception('Failed to fetch questions');
     }
   }
 }

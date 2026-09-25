@@ -18,11 +18,8 @@ class QuestionModel {
   });
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
-    // 1. Combine correct and incorrect answers into one list
     List<String> allOptions = List<String>.from(json['incorrect_answers']);
     allOptions.add(json['correct_answer']);
-
-    // 2. Shuffle so the correct answer isn't always last
     allOptions.shuffle();
 
     return QuestionModel(
@@ -38,7 +35,6 @@ class QuestionModel {
     );
   }
 
-  // OpenTDB returns encoded HTML characters (e.g. &quot;, &#039;)
   static String _decodeHtml(String text) {
     return text
         .replaceAll('&quot;', '"')
@@ -47,6 +43,7 @@ class QuestionModel {
         .replaceAll('&lt;', '<')
         .replaceAll('&gt;', '>')
         .replaceAll('&eacute;', 'é')
-        .replaceAll('&deg;', '°');
+        .replaceAll('&deg;', '°')
+        .replaceAll('&Aacute;', 'Á');
   }
 }
